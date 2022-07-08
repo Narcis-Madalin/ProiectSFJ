@@ -19,6 +19,9 @@ public class UsersController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @RequestMapping(method = RequestMethod.GET)
     public List<User> getAll(){
         return userService.getAll();
@@ -40,18 +43,18 @@ public class UsersController {
     }
 
     @RequestMapping(value = "user_id", method = RequestMethod.DELETE)
-    public void deleteUser(@PathVariable Long id){
+    public void deleteUser(@RequestParam Long id){
         userService.deleteUser(id);
     }
 
     @RequestMapping(value = "user_id", method = RequestMethod.PUT)
-    public User updateUser(@PathVariable Long id, @RequestBody User newUser){
+    public User updateUser(@RequestParam Long id, @RequestBody User newUser){
         return userService.updateUser(id, newUser);
     }
 
-//    @RequestMapping(value = "/NameOrEmail", method = RequestMethod.GET)
-//    public User getUserByNameOrEmail(@RequestParam ("username") Optional<String> username, @RequestParam ("email") Optional<String> email){
-//        return userService.getUserByNameOrEmail(username, email);
+//    @RequestMapping(value = "/UsernameOrEmail", method = RequestMethod.GET)
+//    public User findUserByUsernameOrEmail(@RequestParam (value = "username", required = false) String username, @RequestParam (value = "email", required = false) String email){
+//        return userRepository.findUserByUsernameOrEmail(username, email);
 //    }
 
 //    @Autowired

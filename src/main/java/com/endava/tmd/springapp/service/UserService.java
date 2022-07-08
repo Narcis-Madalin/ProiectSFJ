@@ -40,8 +40,8 @@ public class UserService {
         return userRepository.saveAndFlush(currentUser);
     }
 
-//    public User getUserByNameOrEmail(Optional<String> username, Optional<String> email){
-//        return userRepository.getUserByNameOrEmail(username, email);
+//    public User findUserByUsernameOrEmail(String username, String email){
+//        return userRepository.findUserByUsernameOrEmail(username, email);
 //    }
 
 

@@ -37,12 +37,12 @@ public class BooksController {
     }
 
     @RequestMapping(value = "book_id", method = RequestMethod.DELETE)
-    public void deleteUser(@PathVariable Long id){
+    public void deleteUser(@RequestParam Long id){
         bookService.deleteBook(id);
     }
 
     @RequestMapping(value = "book_id", method = RequestMethod.PUT)
-    public Book updateUser(@PathVariable Long id, @RequestBody Book newBook){
+    public Book updateUser(@RequestParam Long id, @RequestBody Book newBook){
         return bookService.updateBook(id, newBook);
     }
 }
