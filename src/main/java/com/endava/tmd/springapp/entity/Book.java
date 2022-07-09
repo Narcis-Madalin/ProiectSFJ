@@ -1,14 +1,17 @@
 package com.endava.tmd.springapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table (name = "books")
+@Table(name = "books")
 public class Book {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column( name = "book_id", nullable = false, updatable = false)
+    @Column( name = "book_id", nullable = false, updatable = false, columnDefinition = "SERIAL")
     private Long bookId;
 
     @Column(nullable = false)
@@ -19,8 +22,20 @@ public class Book {
     @Column(nullable = false)
     private String author;
 
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<AvailableBook> availableBookList;
+
     public Book(){
 
+    }
+
+    public List<AvailableBook> getAvailableBookList() {
+        return availableBookList;
+    }
+
+    public void setAvailableBookList(List<AvailableBook> availableBookList) {
+        this.availableBookList = availableBookList;
     }
 
     public Long getBookId() {

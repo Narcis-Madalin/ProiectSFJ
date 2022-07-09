@@ -1,6 +1,7 @@
 package com.endava.tmd.springapp.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "available_books")
@@ -8,27 +9,40 @@ public class AvailableBook {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column( name = "available_book_id", nullable = false, updatable = false)
-    private long availableBookId;
+    @Column( name = "available_book_id", nullable = false, updatable = false, columnDefinition = "SERIAL")
+    private Long availableBookId;
 
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "book_id", referencedColumnName = "book_id")
+    @JoinColumn(name = "book_id")
     Book book;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "owner_id")
     User owner;
+
+    // book from RentedBook(available_book_id)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<RentedBook> availableRentedBookList;
+
 
     public AvailableBook(){
 
     }
 
-    public long getAvailableBookId() {
+    public List<RentedBook> getAvailableRentedBookList() {
+        return availableRentedBookList;
+    }
+
+    public void setAvailableRentedBookList(List<RentedBook> availableRentedBookList) {
+        this.availableRentedBookList = availableRentedBookList;
+    }
+
+    public Long getAvailableBookId() {
         return availableBookId;
     }
 
-    public void setAvailableBookId(long availableBookId) {
+    public void setAvailableBookId(Long availableBookId) {
         this.availableBookId = availableBookId;
     }
 
