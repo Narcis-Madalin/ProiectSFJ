@@ -26,8 +26,20 @@ public class Book {
     @JsonIgnore
     private List<AvailableBook> availableBookList;
 
+    //waitingList = waited for list
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<WaitingList> waitingList;
+
     public Book(){
 
+    }
+
+    public List<WaitingList> getWaitingList() {
+        return waitingList;
+    }
+
+    public void setWaitingList(List<WaitingList> waitingList) {
+        this.waitingList = waitingList;
     }
 
     public List<AvailableBook> getAvailableBookList() {

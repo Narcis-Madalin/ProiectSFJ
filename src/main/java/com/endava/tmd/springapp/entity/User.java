@@ -36,8 +36,19 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<RentedBook> rentedBookList;
 
+    @OneToMany(mappedBy = "waitingUser", cascade = CascadeType.ALL)
+    private List<WaitingList> booksOnWaitingList;
+
     public User(){
 
+    }
+
+    public List<WaitingList> getBooksOnWaitingList() {
+        return booksOnWaitingList;
+    }
+
+    public void setBooksOnWaitingList(List<WaitingList> booksOnWaitingList) {
+        this.booksOnWaitingList = booksOnWaitingList;
     }
 
     public Set<AvailableBook> getAvailableBooksOwner() {
