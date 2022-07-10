@@ -36,12 +36,17 @@ public class RentedBookController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void addRentedBook(@RequestParam Long availableBookId, @RequestParam Long userId, @RequestParam LocalDateTime rentedUntil, @RequestParam String rentedPeriod){
-        rentedBookService.addRentedBook(availableBookId, userId, rentedUntil, rentedPeriod);
+    public void addManualRentedBook(@RequestParam Long availableBookId, @RequestParam Long userId, @RequestParam LocalDateTime rentedUntil, @RequestParam String rentedPeriod){
+        rentedBookService.addManualRentedBook(availableBookId, userId, rentedUntil, rentedPeriod);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
     public void deleteRentedBook(@RequestParam Long rentedBookId){
         rentedBookService.deleteRentedBook(rentedBookId);
+    }
+
+    @RequestMapping(value = "/addbook", method = RequestMethod.POST)
+    public void addRentedBook(@RequestParam (name = "username") String username, @RequestParam(name = "title") String bookTitle, @RequestParam(name = "period") String period){
+        rentedBookService.addRentedBook(username, bookTitle, period);
     }
 }

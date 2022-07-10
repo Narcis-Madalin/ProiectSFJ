@@ -1,5 +1,6 @@
 package com.endava.tmd.springapp.controllers;
 
+import com.endava.tmd.springapp.entity.Book;
 import com.endava.tmd.springapp.entity.User;
 import com.endava.tmd.springapp.repository.UserRepository;
 import com.endava.tmd.springapp.service.UserService;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +53,16 @@ public class UsersController {
     @RequestMapping(value = "user_id", method = RequestMethod.PUT)
     public User updateUser(@RequestParam Long id, @RequestBody User newUser){
         return userService.updateUser(id, newUser);
+    }
+
+    @RequestMapping(params = "user_id", method = RequestMethod.POST)
+    public void addAvailableBook(@RequestParam (name = "user_id") Long userId, @RequestBody Book book){
+        userService.addAvailableBook(userId, book);
+    }
+
+    @RequestMapping(value = "/borrower", method = RequestMethod.GET)
+    public HashMap<String, LocalDateTime> seeBorrowerAndRentedUntil(@RequestParam (name = "username") String username){
+        return userService.seeBorrowerAndRentedUntil(username);
     }
 
 //    @RequestMapping(value = "/UsernameOrEmail", method = RequestMethod.GET)

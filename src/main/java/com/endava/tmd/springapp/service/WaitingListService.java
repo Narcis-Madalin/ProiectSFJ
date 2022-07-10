@@ -4,6 +4,7 @@ import com.endava.tmd.springapp.entity.WaitingList;
 import com.endava.tmd.springapp.repository.BookRepository;
 import com.endava.tmd.springapp.repository.UserRepository;
 import com.endava.tmd.springapp.repository.WaitingListRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,10 +12,13 @@ import java.util.List;
 @Service
 public class WaitingListService {
 
+    @Autowired
     private WaitingListRepository waitingListRepository;
 
+    @Autowired
     private UserRepository userRepository;
 
+    @Autowired
     private BookRepository bookRepository;
 
     public List<WaitingList> getAllWaitingUsers(){

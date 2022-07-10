@@ -71,4 +71,15 @@ public class RentedBook {
     public void setRentedPeriod(String rentedPeriod) {
         this.rentedPeriod = rentedPeriod;
     }
+
+    @Override
+    public String toString() {
+        return "RentedBook{" +
+                "rentedBookId=" + rentedBookId +
+                ", book=" + book +
+                ", user=" + user +
+                ", rentedUntil=" + rentedUntil +
+                ", rentedPeriod='" + rentedPeriod + '\'' +
+                '}';
+    }
 }

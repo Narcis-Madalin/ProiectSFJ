@@ -20,7 +20,7 @@ public class AvailableBookController {
     @Autowired
     private AvailableBookService availableBookService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping( method = RequestMethod.GET)
     public List<AvailableBook> getAvailableBooks(){
         return availableBookService.getAll();
     }
@@ -36,12 +36,17 @@ public class AvailableBookController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void addAvailableBook(@RequestParam Long bookId, @RequestParam Long ownerId){
-        availableBookService.addAvailableBook(bookId, ownerId);
+    public void addManualAvailableBook(@RequestParam (name = "book_id") Long bookId, @RequestParam(name = "owner_id") Long ownerId){
+        availableBookService.addManualAvailableBook(bookId, ownerId);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
     public void deleteAvailableBook(@RequestParam Long availableBookId){
         availableBookService.deleteAvailableBook(availableBookId);
+    }
+
+    @RequestMapping(value = "/available", method = RequestMethod.GET)
+    public List<AvailableBook> getAllAvailableBooksForCurrentUser(@RequestParam(name = "username") String username){
+        return availableBookService.getAllAvailableBooksForCurrentUser(username);
     }
 }

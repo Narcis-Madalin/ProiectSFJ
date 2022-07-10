@@ -3,6 +3,7 @@ package com.endava.tmd.springapp.service;
 import com.endava.tmd.springapp.entity.Book;
 import com.endava.tmd.springapp.repository.BookRepository;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 @Service
 public class BookService {
 
+    @Autowired
     private final BookRepository bookRepository;
 
     public BookService(BookRepository bookRepository){
@@ -24,8 +26,8 @@ public class BookService {
         return bookRepository.findById(id).get();
     }
 
-    public Book addBook(Book user){
-        return bookRepository.saveAndFlush(user);
+    public Book addBook(Book book){
+        return bookRepository.saveAndFlush(book);
     }
 
     public void deleteBook(Long id){

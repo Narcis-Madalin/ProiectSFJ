@@ -34,9 +34,11 @@ public class User {
 
     //mappedBy = "user_id",
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<RentedBook> rentedBookList;
 
     @OneToMany(mappedBy = "waitingUser", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<WaitingList> booksOnWaitingList;
 
     public User(){
@@ -97,5 +99,10 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Username: " + getUsername();
     }
 }

@@ -1,18 +1,37 @@
 package com.endava.tmd.springapp.service;
 
+import com.endava.tmd.springapp.entity.AvailableBook;
+import com.endava.tmd.springapp.entity.Book;
+import com.endava.tmd.springapp.entity.RentedBook;
 import com.endava.tmd.springapp.entity.User;
+import com.endava.tmd.springapp.repository.AvailableBookRepository;
+import com.endava.tmd.springapp.repository.BookRepository;
+import com.endava.tmd.springapp.repository.RentedBookRepository;
 import com.endava.tmd.springapp.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class UserService {
 
+    @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
+
+    @Autowired
+    private AvailableBookRepository availableBookRepository;
+
+    @Autowired
+    private BookService bookService;
+
+    @Autowired
+    private RentedBookRepository rentedBookRepository;
 
     public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
@@ -40,9 +59,41 @@ public class UserService {
         return userRepository.saveAndFlush(currentUser);
     }
 
+
 //    public User findUserByUsernameOrEmail(String username, String email){
 //        return userRepository.findUserByUsernameOrEmail(username, email);
 //    }
 
+    public void addAvailableBook(Long userId, Book book){
+        User currentUser = userRepository.findById(userId).get();
+
+        if(bookRepository.findBookByAuthorAndAndTitle(book.getAuthor(), book.getTitle()) == null){
+            bookService.addBook(book);
+        }
+
+        AvailableBook newAvailableBook = new AvailableBook();
+        newAvailableBook.setBook(book);
+        newAvailableBook.setOwner(currentUser);
+        availableBookRepository.saveAndFlush(newAvailableBook);
+    }
+
+    public HashMap<String, LocalDateTime> seeBorrowerAndRentedUntil(String username){
+        HashMap<String, LocalDateTime> borrowerAndRentedUntil = new HashMap<>();
+
+        List<AvailableBook> booksOfTheOwner = availableBookRepository.getAvailableBooksByOwner(userRepository.findUserByUsername(username));
+
+        List<RentedBook> rentedBooksOfTheOwner = new ArrayList<>();
+
+        for (AvailableBook book : booksOfTheOwner){
+            rentedBooksOfTheOwner.add(rentedBookRepository.getRentedBookByBook(book));
+        }
+
+        for (RentedBook book : rentedBooksOfTheOwner){
+            borrowerAndRentedUntil.put(book.getUser().getUsername(), book.getRentedUntil());
+        }
+
+        return borrowerAndRentedUntil;
+
+    }
 
 }

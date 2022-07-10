@@ -1,5 +1,7 @@
 package com.endava.tmd.springapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class AvailableBook {
 
     // book from RentedBook(available_book_id)
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<RentedBook> availableRentedBookList;
 
 
@@ -60,5 +63,15 @@ public class AvailableBook {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public String toString() {
+        return "AvailableBook{" +
+                "availableBookId=" + availableBookId +
+                ", book=" + book +
+                ", owner=" + owner +
+                ", availableRentedBookList=" + availableRentedBookList +
+                '}';
     }
 }
