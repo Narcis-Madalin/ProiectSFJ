@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface RentedBookRepository extends JpaRepository<RentedBook, Long> {
 
+    List<RentedBook> getRentedBooksByBook(AvailableBook book);
+
     RentedBook getRentedBookByBook(AvailableBook book);
 }

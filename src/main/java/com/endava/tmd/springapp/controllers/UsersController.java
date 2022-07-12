@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +19,6 @@ public class UsersController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @RequestMapping(method = RequestMethod.GET)
     public List<User> getAll(){
@@ -58,11 +53,6 @@ public class UsersController {
     @RequestMapping(params = "user_id", method = RequestMethod.POST)
     public void addAvailableBook(@RequestParam (name = "user_id") Long userId, @RequestBody Book book){
         userService.addAvailableBook(userId, book);
-    }
-
-    @RequestMapping(value = "/borrower", method = RequestMethod.GET)
-    public HashMap<String, LocalDateTime> seeBorrowerAndRentedUntil(@RequestParam (name = "username") String username){
-        return userService.seeBorrowerAndRentedUntil(username);
     }
 
 //    @RequestMapping(value = "/UsernameOrEmail", method = RequestMethod.GET)

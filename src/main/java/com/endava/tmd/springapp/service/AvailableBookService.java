@@ -1,12 +1,15 @@
 package com.endava.tmd.springapp.service;
 
 import com.endava.tmd.springapp.entity.AvailableBook;
+import com.endava.tmd.springapp.entity.Book;
 import com.endava.tmd.springapp.entity.User;
 import com.endava.tmd.springapp.repository.AvailableBookRepository;
 import com.endava.tmd.springapp.repository.BookRepository;
 import com.endava.tmd.springapp.repository.RentedBookRepository;
 import com.endava.tmd.springapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -44,7 +47,33 @@ public class AvailableBookService {
         availableBookRepository.saveAndFlush(availableBook);
     }
 
+    public Object addAvailableBook(String bookTitle, String username){
 
+        Book currentBook = bookRepository.findBookByTitle(bookTitle);
+        User currentUser = userRepository.findUserByUsername(username);
+
+        List<AvailableBook> currentBooks =  availableBookRepository.getAvailableBooksByBook(currentBook);
+
+        for(AvailableBook book : currentBooks){
+            if(book.getOwner() == currentUser){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        if(currentBook != null && currentUser != null) {
+            AvailableBook availableBook = new AvailableBook();
+            availableBook.setBook(currentBook);
+            availableBook.setOwner(currentUser);
+            availableBookRepository.saveAndFlush(availableBook);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
     public void deleteAvailableBook(Long availableBookId){
         availableBookRepository.deleteById(availableBookId);

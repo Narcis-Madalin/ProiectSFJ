@@ -46,7 +46,13 @@ public class RentedBookController {
     }
 
     @RequestMapping(value = "/addbook", method = RequestMethod.POST)
-    public void addRentedBook(@RequestParam (name = "username") String username, @RequestParam(name = "title") String bookTitle, @RequestParam(name = "period") String period){
-        rentedBookService.addRentedBook(username, bookTitle, period);
+    public Object addRentedBook(@RequestParam (name = "username") String username, @RequestParam(name = "title") String bookTitle, @RequestParam(name = "period") String period, @RequestParam(name = "owner") String owner){
+        return rentedBookService.addRentedBook(username, bookTitle, period, owner);
     }
+
+    @RequestMapping(value = "/borrower", method = RequestMethod.GET)
+    public Object seeBorrowerAndRentedUntil(@RequestParam (name = "username") String username){
+        return rentedBookService.seeBorrowerAndRentedUntil(username);
+    }
+
 }

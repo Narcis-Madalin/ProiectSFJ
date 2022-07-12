@@ -13,8 +13,8 @@ public interface AvailableBookRepository extends JpaRepository<AvailableBook, Lo
     @Query("select a from AvailableBook a where a.owner.userId <> :userId")
     List<AvailableBook> getAllAvailableBooksForCurrentUser(Long userId);
 
-    AvailableBook getAvailableBookByBook(Book book);
+    List<AvailableBook> getAvailableBooksByBook(Book book);
 
-    @Query("select a from AvailableBook a where a.owner.userId = :owner")
+    //@Query("select a from AvailableBook a where a.owner.userId = :owner")
     List<AvailableBook> getAvailableBooksByOwner(User owner);
 }

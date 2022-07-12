@@ -1,7 +1,6 @@
 package com.endava.tmd.springapp.controllers;
 
 import com.endava.tmd.springapp.entity.AvailableBook;
-import com.endava.tmd.springapp.entity.Book;
 import com.endava.tmd.springapp.service.AvailableBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,9 +34,14 @@ public class AvailableBookController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/manualAdd", method = RequestMethod.POST)
     public void addManualAvailableBook(@RequestParam (name = "book_id") Long bookId, @RequestParam(name = "owner_id") Long ownerId){
         availableBookService.addManualAvailableBook(bookId, ownerId);
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public Object addAvailableBook(@RequestParam (name = "title") String title, @RequestParam(name = "username") String username){
+        return availableBookService.addAvailableBook(title, username);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)

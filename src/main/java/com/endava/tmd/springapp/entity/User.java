@@ -103,6 +103,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "Username: " + getUsername();
+        return "Username + " + getUsername();
     }
 }
