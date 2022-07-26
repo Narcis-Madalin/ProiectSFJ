@@ -55,4 +55,14 @@ public class RentedBookController {
         return rentedBookService.seeBorrowerAndRentedUntil(username);
     }
 
+    @RequestMapping(value = "/extendRentingPeriod", method = RequestMethod.PATCH)
+    public Object extendRentedPeriod(@RequestParam (name = "username") String username, @RequestParam (name = "title") String title, @RequestParam (name = "period") String period){
+        return rentedBookService.extendRentedPeriod(username, title, period);
+    }
+
+    @RequestMapping(value = "/borrowed", method = RequestMethod.GET)
+    public Object seeBorrowedBooks(@RequestParam (name = "username") String username){
+        return rentedBookService.seeBorrowedBooks(username);
+    }
+
 }

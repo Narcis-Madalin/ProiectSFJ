@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("available_books")
@@ -52,5 +53,10 @@ public class AvailableBookController {
     @RequestMapping(value = "/available", method = RequestMethod.GET)
     public List<AvailableBook> getAllAvailableBooksForCurrentUser(@RequestParam(name = "username") String username){
         return availableBookService.getAllAvailableBooksForCurrentUser(username);
+    }
+
+    @RequestMapping(value = "/availability", method = RequestMethod.GET)
+    public Object searchBookByAuthorOrTitle(@RequestParam(name = "author") Optional<String> author, @RequestParam(name = "title") Optional<String> title){
+        return availableBookService.searchBookByAuthorOrTitle(author, title);
     }
 }

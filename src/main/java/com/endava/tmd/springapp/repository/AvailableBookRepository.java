@@ -7,14 +7,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AvailableBookRepository extends JpaRepository<AvailableBook, Long> {
 
     @Query("select a from AvailableBook a where a.owner.userId <> :userId")
     List<AvailableBook> getAllAvailableBooksForCurrentUser(Long userId);
 
-    List<AvailableBook> getAvailableBooksByBook(Book book);
+    Optional<List<AvailableBook>> getAvailableBooksByBook(Book book);
 
     //@Query("select a from AvailableBook a where a.owner.userId = :owner")
     List<AvailableBook> getAvailableBooksByOwner(User owner);
+
+    AvailableBook getAvailableBookByBook(Book book);
 }

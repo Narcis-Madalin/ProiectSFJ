@@ -12,8 +12,8 @@ public class WaitingList {
     private Long waitingId;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "book_id")
-    Book book;
+    @JoinColumn(name = "available_book_id")
+    AvailableBook availableBook;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
@@ -34,12 +34,12 @@ public class WaitingList {
         this.waitingId = waitingId;
     }
 
-    public Book getBook() {
-        return book;
+    public AvailableBook getBook() {
+        return availableBook;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public void setBook(AvailableBook availableBook) {
+        this.availableBook = availableBook;
     }
 
     public User getWaitingUser() {

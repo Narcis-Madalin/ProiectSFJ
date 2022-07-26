@@ -1,6 +1,7 @@
 package com.endava.tmd.springapp.service;
 
 import com.endava.tmd.springapp.entity.AvailableBook;
+import com.endava.tmd.springapp.entity.Book;
 import com.endava.tmd.springapp.entity.RentedBook;
 import com.endava.tmd.springapp.entity.User;
 import com.endava.tmd.springapp.repository.AvailableBookRepository;
@@ -54,12 +55,13 @@ public class RentedBookService {
         rentedBook.setUser(userRepository.findById(userId).get());
         rentedBook.setRentedUntil(rentedUntil);
         rentedBook.setRentedPeriod(rentedPeriod);
+        rentedBook.setExtendedPeriod(false);
         rentedBookRepository.saveAndFlush(rentedBook);
     }
 
     public Object addRentedBook(String username, String bookTitle, String period, String owner){
 
-        List<AvailableBook> currentBooks = availableBookRepository.getAvailableBooksByBook(bookRepository.findBookByTitle(bookTitle));
+        List<AvailableBook> currentBooks = availableBookRepository.getAvailableBooksByBook(bookRepository.findBookByTitle(bookTitle)).get();
         User currentUser = userRepository.findUserByUsername(username);
         AvailableBook currentBook = null;
 
@@ -69,7 +71,9 @@ public class RentedBookService {
             }
         }
 
-        if((period.equals("1 week") || period.equals("2 weeks") || period.equals("3 weeks") || period.equals("1 month"))
+        // the case where the book was available for renting from the start
+        boolean periodChecker = period.equals("1 week") || period.equals("2 weeks") || period.equals("3 weeks") || period.equals("1 month");
+        if(     periodChecker
                 && currentBook != null
                 && rentedBookRepository.getRentedBookByBook(currentBook) == null
                 && currentUser != null
@@ -85,11 +89,24 @@ public class RentedBookService {
                 case "1 month" -> rentedBook.setRentedUntil(LocalDateTime.now().plusMonths(1));
             }
             rentedBook.setRentedPeriod(period);
+            rentedBook.setExtendedPeriod(false);
             rentedBookRepository.saveAndFlush(rentedBook);
 
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
+        // the case where the book is already rented
+
+        else if(        periodChecker
+                        && currentBook != null
+                        && rentedBookRepository.getRentedBookByBook(currentBook) != null
+                        && currentUser != null
+                        && currentUser != currentBook.getOwner()
+        ){
+            return "This book is already rented. If you want, you can be added to the waiting list for when it becomes available again.";
+        }
+
+        // the case where the requested information is wrong(or doesn't exist)
         else{
            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -136,4 +153,57 @@ public class RentedBookService {
 
     }
 
+    public Object extendRentedPeriod(String username, String bookTitle, String period){
+
+        User currentUser = userRepository.findUserByUsername(username);
+        Book currentBook = bookRepository.findBookByTitle(bookTitle);
+
+        List<RentedBook> rentedBooks = rentedBookRepository.getRentedBooksByUser(currentUser);
+
+        if(rentedBooks != null && currentUser != null && (period.equals("1 week") || period.equals("2 weeks")) && currentBook != null){
+
+            for(RentedBook book : rentedBooks){
+
+                if(book.getBook().getBook().getTitle().equals(bookTitle) && !book.getExtendedPeriod()){
+                    switch (period){
+                        case "1 week" -> {book.setRentedUntil(book.getRentedUntil().plusDays(7));
+                            book.setRentedPeriod(period);}
+                        case "2 weeks" -> {
+                            book.setRentedUntil(book.getRentedUntil().plusDays(14));
+                            book.setRentedPeriod(period);
+                        }
+                    }
+
+                    book.setExtendedPeriod(true);
+                    rentedBookRepository.save(book);
+                    return new ResponseEntity<>(HttpStatus.OK);
+                }
+
+                else return "The period was already extended for this book by " + book.getRentedPeriod() + ". You can't extend the period more than 1 time.";
+            }
+
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    public Object seeBorrowedBooks(String username){
+
+        HashMap<String, LocalDateTime> borrowedBooks = new HashMap<>();
+
+        User user = userRepository.findUserByUsername(username);
+
+        if(user != null){
+            List<RentedBook> borrowedBooksList = rentedBookRepository.getRentedBooksByUser(user);
+
+            for (RentedBook book : borrowedBooksList){
+                borrowedBooks.put(book.getBook().getBook().getTitle(), book.getRentedUntil());
+            }
+
+            return borrowedBooks;
+        }
+
+        else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

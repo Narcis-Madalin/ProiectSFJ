@@ -2,6 +2,7 @@ package com.endava.tmd.springapp.service;
 
 import com.endava.tmd.springapp.entity.AvailableBook;
 import com.endava.tmd.springapp.entity.Book;
+import com.endava.tmd.springapp.entity.RentedBook;
 import com.endava.tmd.springapp.entity.User;
 import com.endava.tmd.springapp.repository.AvailableBookRepository;
 import com.endava.tmd.springapp.repository.BookRepository;
@@ -13,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AvailableBookService {
@@ -52,7 +55,7 @@ public class AvailableBookService {
         Book currentBook = bookRepository.findBookByTitle(bookTitle);
         User currentUser = userRepository.findUserByUsername(username);
 
-        List<AvailableBook> currentBooks =  availableBookRepository.getAvailableBooksByBook(currentBook);
+        List<AvailableBook> currentBooks =  availableBookRepository.getAvailableBooksByBook(currentBook).get();
 
         for(AvailableBook book : currentBooks){
             if(book.getOwner() == currentUser){
@@ -93,6 +96,51 @@ public class AvailableBookService {
         }
 
         return availableBooks;
+    }
+
+    public Object searchBookByAuthorOrTitle(Optional<String> author, Optional<String> title){
+
+        // lista care contine toate cartile din tabelul "books" care au acelasi autor
+        List<Book> allMatchingBooks = bookRepository.getBookByAuthorOrTitle(author, title);
+
+        List<AvailableBook> currentAvailableBooks = new ArrayList<>();
+
+        if(allMatchingBooks.size() == 1) {
+            currentAvailableBooks = availableBookRepository.getAvailableBooksByBook(allMatchingBooks.get(0)).get();
+        }
+        else {
+            for (Book book: allMatchingBooks){
+
+                // in case of multiple available books with the same name and author but different owners
+                List<AvailableBook> availableBookList = availableBookRepository.getAvailableBooksByBook(book).get();
+
+                currentAvailableBooks.addAll(availableBookList);
+            }
+        }
+
+        if(currentAvailableBooks.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else {
+
+            HashMap<String, String> searchedBooks = new HashMap<>();
+
+            for(AvailableBook book : currentAvailableBooks){
+                String bookTitle = book.getBook().getTitle();
+                String bookOwner = book.getOwner().getUsername();
+                String available = "";
+                RentedBook currentBook = rentedBookRepository.getRentedBookByBook(book);
+
+                if(currentBook != null) {
+                    searchedBooks.put("Book: " + bookTitle + ", Owner: " + bookOwner, available + currentBook.getRentedUntil());
+                }
+                else {
+                    searchedBooks.put("Book: " + bookTitle + ", Owner: " + bookOwner, available + "is available");
+                }
+            }
+
+            return searchedBooks;
+        }
     }
 
 }

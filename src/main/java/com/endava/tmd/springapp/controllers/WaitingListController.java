@@ -35,12 +35,17 @@ public class WaitingListController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void addWaitingUser(@RequestParam Long bookId, @RequestParam Long userId, @RequestParam Long waitingNumber){
-        waitingListService.addWaitingUser(bookId, userId, waitingNumber);
+    public void addManualyWaitingUser(@RequestParam Long bookId, @RequestParam Long userId, @RequestParam Long waitingNumber){
+        waitingListService.addManualyWaitingUser(bookId, userId, waitingNumber);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
     public void deleteWaitingUser(@RequestParam Long id){
         waitingListService.deleteWaitingUser(id);
+    }
+
+    @RequestMapping(value = "/addWaitingUser", method = RequestMethod.POST)
+    public Object addWaitingUser(@RequestParam (name = "username") String username, @RequestParam (name = "title") String bookTitle, @RequestParam (name = "owner") String owner){
+        return waitingListService.addWaitingUser(username, bookTitle, owner);
     }
 }

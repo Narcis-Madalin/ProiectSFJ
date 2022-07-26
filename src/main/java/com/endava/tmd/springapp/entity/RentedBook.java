@@ -27,6 +27,9 @@ public class RentedBook {
     @Column(name = "rented_period")
     private String rentedPeriod;
 
+    @Column(name = "was_period_extended")
+    private Boolean extendedPeriod;
+
     public RentedBook(){
 
     }
@@ -70,6 +73,14 @@ public class RentedBook {
 
     public void setRentedPeriod(String rentedPeriod) {
         this.rentedPeriod = rentedPeriod;
+    }
+
+    public Boolean getExtendedPeriod() {
+        return extendedPeriod;
+    }
+
+    public void setExtendedPeriod(Boolean extendedPeriod) {
+        this.extendedPeriod = extendedPeriod;
     }
 
     @Override

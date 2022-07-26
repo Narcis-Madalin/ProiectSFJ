@@ -28,6 +28,12 @@ public class AvailableBook {
     @JsonIgnore
     private List<RentedBook> availableRentedBookList;
 
+    // book from WaitingList(available_book_id)
+    @OneToMany(mappedBy = "availableBook", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<WaitingList> booksOnTheWaitingList;
+
+
 
     public AvailableBook(){
 
@@ -63,6 +69,14 @@ public class AvailableBook {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public List<WaitingList> getBooksOnTheWaitingList() {
+        return booksOnTheWaitingList;
+    }
+
+    public void setBooksOnTheWaitingList(List<WaitingList> booksOnTheWaitingList) {
+        this.booksOnTheWaitingList = booksOnTheWaitingList;
     }
 
     @Override
