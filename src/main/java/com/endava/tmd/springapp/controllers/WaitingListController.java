@@ -48,4 +48,19 @@ public class WaitingListController {
     public Object addWaitingUser(@RequestParam (name = "username") String username, @RequestParam (name = "title") String bookTitle, @RequestParam (name = "owner") String owner){
         return waitingListService.addWaitingUser(username, bookTitle, owner);
     }
+
+    @RequestMapping(value = "/waitingUser", method = RequestMethod.GET)
+    public Object seeWaitingUsersByUsername(@RequestParam (name = "username") String username){
+        return waitingListService.seeWaitingUsersByUsername(username);
+    }
+
+    @RequestMapping(value = "/waitingBook", method = RequestMethod.GET)
+    public Object seeWaitingUsersByBook(@RequestParam (name = "title") String bookTitle, @RequestParam (name = "owner") String owner){
+        return waitingListService.seeWaitingUsersByBook(bookTitle, owner);
+    }
+
+    @RequestMapping(value = "/waitingNumber", method = RequestMethod.GET)
+    public Object seeWaitingUsersByWaitingNumber(@RequestParam (name = "waitingNumber") Long number){
+        return waitingListService.seeWaitingUsersByWaitingNumber(number);
+    }
 }

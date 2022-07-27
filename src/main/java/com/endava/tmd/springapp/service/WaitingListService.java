@@ -111,4 +111,43 @@ public class WaitingListService {
         }
     }
 
+    public Object seeWaitingUsersByUsername(String username){
+
+        User currentUser = userRepository.findUserByUsername(username);
+
+        if(currentUser != null){
+            return waitingListRepository.getWaitingListByWaitingUser(currentUser);
+        }
+
+        else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public Object seeWaitingUsersByBook(String bookTitle, String owner){
+
+        List<AvailableBook> availableBookList = availableBookRepository.getAvailableBooksByBook(bookRepository.findBookByTitle(bookTitle)).get();
+
+        AvailableBook currentBook = null;
+
+        for (AvailableBook availableBook : availableBookList){
+            if(availableBook.getOwner() == userRepository.findUserByUsername(owner)){
+                currentBook = availableBook;
+            }
+        }
+
+        if(currentBook != null){
+            return waitingListRepository.getWaitingListByAvailableBook(currentBook);
+        }
+
+        else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public Object seeWaitingUsersByWaitingNumber(Long nr){
+
+        return waitingListRepository.getWaitingListByWaitingNumber(nr);
+    }
+
 }
